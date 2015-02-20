@@ -6,10 +6,12 @@ import java.util.Random;
 
 public class Drone extends Entity
 {	
-	private final double SPEED = 2.5;
+	private final int SPEED = 3;
 	private final double MAX_HEALTH = 160;
 	private final double DAMAGE = 5;
-	private final double AGGRO_RANGE = 100;
+	private final double AGGRO_RANGE = 400;
+	private final double FOOD_RANGE = 400;
+	private final double SPEED_REDUCTION = 0.80;
 
 	private int turnCounter;
 	private double health = MAX_HEALTH;
@@ -18,51 +20,40 @@ public class Drone extends Entity
 	private boolean isDead;
 
 	private Random random = new Random();
-	
+
 	private Drone enemy;
 
 	private Queen queen;
 
-	public Drone(double x, double y, String faction)
+	public Drone(double x, double y, Faction f)
 	{
 		xPosition = x;
 		yPosition = y;
 
-		this.faction = faction;
+		faction = f;
 
-		width = 15;
-		height = 15;
+		width = 12;
+		height = 12;
+		
+		faction.addDrone(this);
 	}
 
 	public void draw(Graphics g)
 	{
-		Color color;
 		Color outlineColor;
-
-		if(faction.equals("red"))
-		{
-			color = Color.RED;
-		}
-		else if(faction.equals("blue"))
-		{
-			color = Color.BLUE;
-		}
-		else
-		{
-			color = Color.BLACK;
-		}
+		
+		g.setColor(faction.getColor());
 
 		if(isDead)
 		{
-			color = Color.black;
+			g.setColor(Color.black);
 		}
 
-		g.setColor(color);
 		g.fillRect((int)xPosition - (width / 2), (int)yPosition - (height / 2), width, height);
 
 		if(isFighting)
 		{
-			outlineColor = Color.cyan;
+			outlineColor = Color.white;
 		}
 		else
 		{
@@ -138,13 +129,17 @@ public class Drone extends Entity
 		}
 		else
 		{
-			if(isNearEnemy())
+			if(isNearFood())
+			{
+				goTowardsFood();
+			}
+			else if(isNearEnemy())
 			{
 				fight(enemy);
 			}
 			else
 			{
-				goTowardsFood();
+				randomMovement();
 			}
 		}
 	}
@@ -160,13 +155,15 @@ public class Drone extends Entity
 		{
 			double angleToTarget = calcAngleTo(queen);
 
-			xVelocity = SPEED * Math.cos(angleToTarget);
-			yVelocity = -SPEED * Math.sin(angleToTarget);
+			xVelocity = (SPEED * Math.cos(angleToTarget)) * SPEED_REDUCTION;
+			yVelocity = (-SPEED * Math.sin(angleToTarget)) * SPEED_REDUCTION;
 		}
 	}
 
 	public boolean isNearEnemy()
 	{
+		boolean foundEnemy = false;
+		
 		for(Entity e : GamePanel.getEntities())
 		{
 			if(e instanceof Drone)
@@ -175,7 +172,32 @@ public class Drone extends Entity
 
 				if(getDistanceFrom(d) <= AGGRO_RANGE && (!d.getFaction().equals(faction)) && (!d.isDead()))
 				{
-					enemy = d;
+					if(!foundEnemy)
+					{
+						foundEnemy = true;
+						enemy = d;
+					}
+					else
+					{
+						if(getDistanceFrom(d) < getDistanceFrom(enemy))
+						{
+							enemy = d;
+						}
+					}
+				}
+			}
+		}
+		return foundEnemy;
+	}
+	
+	public boolean isNearFood()
+	{
+		for(Entity e : GamePanel.getEntities())
+		{
+			if(e instanceof Food)
+			{
+				if(getDistanceFrom(e) <= FOOD_RANGE)
+				{
 					return true;
 				}
 			}
@@ -188,7 +210,7 @@ public class Drone extends Entity
 		isFighting = true;
 		moveTowards(enemy);
 
-		if(getDistanceFrom(enemy) <= 5)
+		if(getDistanceFrom(enemy) <= 6)
 		{
 			double damageModifier = random.nextDouble() * DAMAGE;
 			
@@ -214,10 +236,6 @@ public class Drone extends Entity
 			{
 				moveTowards(target);
 			}
-		}
-		else
-		{
-			randomMovement();
 		}
 	}
 
@@ -294,8 +312,8 @@ public class Drone extends Entity
 		if(turnCounter >= 40)
 		{
 			Random random = new Random();
-			int randXVel = (random.nextInt(5)-2);
-			int randYVel = (random.nextInt(5)-2);
+			int randXVel = (random.nextInt(SPEED + SPEED + 1) - SPEED);
+			int randYVel = (random.nextInt(SPEED + SPEED + 1) - SPEED);
 
 			xVelocity = randXVel;
 			yVelocity = randYVel;
@@ -350,6 +368,7 @@ public class Drone extends Entity
 	public void destroy()
 	{
 		GamePanel.removeEntity(this);
+		faction.removeDrone(this);
 	}
 
 	public boolean isDead()

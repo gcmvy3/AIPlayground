@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -20,16 +21,21 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 
 	private static int panelWidth;
 	private static int panelHeight;
-	
-	private static int redCount;
-	private static int blueCount;
-	
+
+	private static boolean foodSpawn;
+	private static boolean isPaused;
+	private static boolean greenFaction;
+
+	private static Random random = new Random();
+
 	private static Timer timer;
-	
+
 	private static Controller controller;
-	
+
 	private static ArrayList<Entity> entities = new ArrayList<Entity>(); //Keeps track of all entities in the game
 
+	private static ArrayList<Faction> factions = new ArrayList<Faction>();
+	
 	public GamePanel(int x, int y)
 	{	
 		panelWidth = x;
@@ -37,13 +43,13 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 
 		setPreferredSize(new Dimension(panelWidth, panelHeight));
 		setFocusable(true);
-		
-		//add(new TopMenu());
-		
+
 		controller = new Controller();
-		
+
 		addKeyListener(controller);
 		addMouseListener(controller);
+
+		setBackground(Color.LIGHT_GRAY);
 
 		g = getGraphics();
 		paint(g);
@@ -52,89 +58,164 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 	public void run()	//Starts the game timer. Call this to start the game
 	{	
 		resetWorld();
-		
+
 		timer = new Timer(10, this);
 		timer.setInitialDelay(0);
 
 		timer.start();
 	}
-	
-	public static void initializeActors()
-	{
-		Queen redQueen = new Queen(400, 400, "red");
-		Queen blueQueen = new Queen(1000, 400, "blue");
-		
-		addEntity(redQueen);
-		addEntity(blueQueen);
-	}
-	
+
 	public static void resetWorld()
 	{
 		entities = new ArrayList<Entity>();
-		
+
 		initializeActors();
 	}
-	
+
+	public static void initializeActors()
+	{
+		factions = new ArrayList<Faction>();
+		
+		factions.add(new Faction(Color.RED));
+		factions.add(new Faction(Color.BLUE));
+		
+		Queen redQueen;
+		Queen blueQueen;
+		Queen greenQueen;
+
+		if(greenFaction)
+		{
+			factions.add(new Faction(Color.GREEN));
+			
+			redQueen = new Queen(20, 600, factions.get(0));
+			blueQueen = new Queen(panelWidth - 20, 600, factions.get(1));
+			greenQueen = new Queen(panelWidth / 2, 20, factions.get(2));
+			addEntity(greenQueen);
+		}
+		else
+		{
+			redQueen = new Queen(20, 300, factions.get(0));
+			blueQueen = new Queen(panelWidth - 20, 300, factions.get(1));
+		}
+
+		addEntity(redQueen);
+		addEntity(blueQueen);
+	}
+
+
 	public void actionPerformed(ActionEvent e) //This method is run every time the timer fires
 	{   
 		this.requestFocus();
-		
+
 		controller.update();
-		
-		for(int i = 0; i < entities.size(); i++)
+
+		if(!isPaused)
 		{
-			Entity entity = entities.get(i);
-			entity.act();
+			if(foodSpawn)
+			{
+				spawnFood();
+			}
+
+			for(int i = 0; i < entities.size(); i++)
+			{
+				Entity entity = entities.get(i);
+				entity.act();
+			}
 		}
-		
+
 		this.repaint(); //Calls paintComponent()
+	}
+
+	public void spawnFood()
+	{
+		int bufferZone = 25;
+
+		if(random.nextBoolean())
+		{
+			int xPos = random.nextInt(panelWidth - 2 * bufferZone) + bufferZone;
+			int yPos = random.nextInt(panelHeight - 2 * bufferZone) + bufferZone;
+
+			addEntity(new Food(xPos, yPos));
+		}
 	}
 
 	public void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
-		
+
 		for(Entity entity : entities)
 		{
 			entity.draw(g);
 		}
 		
 		g.setColor(Color.BLACK);
-		g.drawString("Red:  " + redCount, 5, 20);
-		g.drawString("Blue: " + blueCount, 5, 50);
+		g.drawLine(5, 25, 70, 25);
+		
+		for(int i = 0; i < factions.size(); i++)
+		{
+			Faction f = factions.get(i);
+			
+			g.setColor(f.getColor());
+			g.fillRect(5, 25 * (i + 1), 25, 25);
+			g.setColor(Color.BLACK);
+			g.drawRect(5, 25 * (i + 1), 25, 25);
+			g.drawString("" + f.getDroneCount(), 35, 25 * (i + 2) - 5);
+			
+			g.drawLine(5, 25 * (i + 2), 70, 25 * (i + 2));
+		}
 	}
-	
+
 	public static ArrayList<Entity> getEntities()
 	{
 		return entities;
 	}
-	
+
 	public static void addEntity(Entity e)
 	{		
-		if(e.getFaction().equals("red"))
-		{
-			redCount++;
-		}
-		else if(e.getFaction().equals("blue"))
-		{
-			blueCount++;
-		}
-		
 		entities.add(e);
 	}
 
 	public static void removeEntity(Entity e)
 	{
-		if(e.getFaction().equals("red"))
-		{
-			redCount--;
-		}
-		else if(e.getFaction().equals("blue"))
-		{
-			blueCount--;
-		}
-		
 		entities.remove(e);
+	}
+
+	public static void togglePause()
+	{
+		if(isPaused)
+		{
+			isPaused = false;
+		}
+		else
+		{
+			isPaused = true;
+		}
+	}
+
+	public static void toggleFoodSpawn()
+	{
+		if(foodSpawn)
+		{
+			foodSpawn = false;
+		}
+		else
+		{
+			foodSpawn = true;
+		}
+	}
+
+	public static void toggleGreenFaction()
+	{
+		if(greenFaction)
+		{
+			greenFaction = false;
+			resetWorld();
+		}
+		else
+		{
+			greenFaction = true;
+			resetWorld();
+		}
 	}
 
 	public static int getPanelWidth()
@@ -145,15 +226,5 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 	public static int getPanelHeight()
 	{
 		return panelHeight;
-	}
-	
-	public static int getRedCount()
-	{
-		return redCount;
-	}
-	
-	public static int getBlueCount()
-	{
-		return blueCount;
 	}
 }

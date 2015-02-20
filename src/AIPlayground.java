@@ -16,8 +16,8 @@ public class AIPlayground
 
 	private static GamePanel gamePanel;
 	
-	private static int windowWidth = 1400;
-	private static int windowHeight = 800;
+	private static int windowWidth = 1300;
+	private static int windowHeight = 690;
 	
 	public static void main(String[] args) 
 	{	

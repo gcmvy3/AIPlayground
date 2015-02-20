@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -27,7 +28,7 @@ public abstract class Entity
 	protected double xVelocity;
 	protected double yVelocity;
 	
-	protected String faction = "none";
+	protected Faction faction = new Faction(Color.WHITE);
 	
 	protected Rectangle bounds;
 
@@ -127,14 +128,14 @@ public abstract class Entity
 		yVelocity = vY;
 	}
 	
-	public String getFaction()
+	public Faction getFaction()
 	{
 		return faction;
 	}
 
-	public void setFaction(String s)
+	public void setFaction(Faction f)
 	{
-		faction = s;
+		faction = f;
 	}
 	
 	public boolean isTouching(Entity e)

@@ -22,6 +22,8 @@ public class TopMenu extends JMenuBar
 
 	static JCheckBox hiveMindCheckBox;
 	static JCheckBox pauseCheckBox;
+	static JCheckBox foodCheckBox;
+	static JCheckBox greenFactionCheckBox;
 	static JRadioButton redButton;
 	static JRadioButton blueButton;
 	
@@ -67,6 +69,7 @@ public class TopMenu extends JMenuBar
 			{
 				if(e.getSource().equals(redButton))
 				{
+					//TODO: Wire this
 					//Faction = red
 				}
 				else if(e.getSource().equals(blueButton))
@@ -83,13 +86,22 @@ public class TopMenu extends JMenuBar
 	}
 	
 	public void initOptionsButtons()
-	{
-		pauseCheckBox = new JCheckBox("Pause");
-		pauseCheckBox.addActionListener(new ActionListener()
+	{		
+		foodCheckBox = new JCheckBox("Spawn Food");
+		foodCheckBox.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				//GamePanel.togglePause();
+				GamePanel.toggleFoodSpawn();
+			}
+		});
+		
+		greenFactionCheckBox = new JCheckBox("Green Faction");
+		greenFactionCheckBox.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				GamePanel.toggleGreenFaction();
 			}
 		});
 		
@@ -98,7 +110,17 @@ public class TopMenu extends JMenuBar
 		{
 			public void actionPerformed(ActionEvent e)
 			{
+				// TODO Wire this
 				//GamePanel.toggleHiveMind();
+			}
+		});
+		
+		pauseCheckBox = new JCheckBox("Pause");
+		pauseCheckBox.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				GamePanel.togglePause();
 			}
 		});
 		
@@ -149,6 +171,8 @@ public class TopMenu extends JMenuBar
 		optionsMenu = new JMenu("Options");	
 		
 		optionsMenu.add(pauseCheckBox);
+		optionsMenu.add(foodCheckBox);
+		optionsMenu.add(greenFactionCheckBox);
 		optionsMenu.add(hiveMindCheckBox);
 		optionsMenu.addSeparator();
 		optionsMenu.add(resetButton);

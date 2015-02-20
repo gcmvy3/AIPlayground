@@ -6,12 +6,12 @@ public class Queen extends Entity
 {
 	private int foodCount = 5;
 
-	public Queen(double xPos, double yPos, String faction)
+	public Queen(double xPos, double yPos, Faction f)
 	{
 		xPosition = xPos;
 		yPosition = yPos;
 
-		this.faction = faction;
+		faction = f;
 
 		width = 30;
 		height = 30;
@@ -21,14 +21,7 @@ public class Queen extends Entity
 
 	public void draw(Graphics g)
 	{
-		if(faction.equals("red"))
-		{
-			g.setColor(Color.RED);	
-		}
-		else if(faction.equals("blue"))
-		{
-			g.setColor(Color.BLUE);
-		}
+		g.setColor(faction.getColor());
 
 		g.fillRect((int)xPosition - (width / 2), (int)yPosition - (height / 2), width, height);
 
@@ -53,25 +46,11 @@ public class Queen extends Entity
 		}
 		else
 		{
-			if(faction.equals("red"))
+			if(faction.getDroneCount() < 4)
 			{
-				if(GamePanel.getRedCount() <= 1)
-				{
-					Drone newDrone = new Drone(xPosition, yPosition, faction);
+				Drone newDrone = new Drone(xPosition, yPosition, faction);
 
-					GamePanel.addEntity(newDrone);
-
-				}
-			}
-			else if(faction.equals("blue"))
-			{
-				if(GamePanel.getBlueCount() <= 1)
-				{
-					Drone newDrone = new Drone(xPosition, yPosition, faction);
-
-					GamePanel.addEntity(newDrone);
-
-				}
+				GamePanel.addEntity(newDrone);
 			}
 		}
 	}
