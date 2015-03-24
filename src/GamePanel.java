@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import javax.swing.JPanel;
@@ -32,9 +33,14 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 
 	private static Controller controller;
 
-	private static ArrayList<Entity> entities = new ArrayList<Entity>(); //Keeps track of all entities in the game
+	//Keeps track of all entities in the game
+	private static ArrayList<Entity> entities = new ArrayList<Entity>(); 
+
+	// Entities that will be deleted at the end of the step
+	private static List<Entity> entitiesToRemove = new ArrayList<Entity>();
 
 	private static ArrayList<Faction> factions = new ArrayList<Faction>();
+
 	
 	public GamePanel(int x, int y)
 	{	
@@ -75,10 +81,10 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 	public static void initializeActors()
 	{
 		factions = new ArrayList<Faction>();
-		
+
 		factions.add(new Faction(Color.RED));
 		factions.add(new Faction(Color.BLUE));
-		
+
 		Queen redQueen;
 		Queen blueQueen;
 		Queen greenQueen;
@@ -86,7 +92,7 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 		if(greenFaction)
 		{
 			factions.add(new Faction(Color.GREEN));
-			
+
 			redQueen = new Queen(20, 600, factions.get(0));
 			blueQueen = new Queen(panelWidth - 20, 600, factions.get(1));
 			greenQueen = new Queen(panelWidth / 2, 20, factions.get(2));
@@ -109,6 +115,7 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 
 		controller.update();
 
+
 		if(!isPaused)
 		{
 			if(foodSpawn)
@@ -119,8 +126,16 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 			for(int i = 0; i < entities.size(); i++)
 			{
 				Entity entity = entities.get(i);
+				
 				entity.act();
 			}
+
+			for(Entity entity : entitiesToRemove)
+			{
+				entities.remove(entity);
+			}
+
+			entitiesToRemove = new ArrayList<Entity>();
 		}
 
 		this.repaint(); //Calls paintComponent()
@@ -143,24 +158,26 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 	{
 		super.paintComponent(g);
 
-		for(Entity entity : entities)
+		List<Entity> entitiesToDraw = new ArrayList<Entity>(entities);
+
+		for(Entity entity : entitiesToDraw)
 		{
 			entity.draw(g);
 		}
-		
+
 		g.setColor(Color.BLACK);
 		g.drawLine(5, 25, 70, 25);
-		
+
 		for(int i = 0; i < factions.size(); i++)
 		{
 			Faction f = factions.get(i);
-			
+
 			g.setColor(f.getColor());
 			g.fillRect(5, 25 * (i + 1), 25, 25);
 			g.setColor(Color.BLACK);
 			g.drawRect(5, 25 * (i + 1), 25, 25);
 			g.drawString("" + f.getDroneCount(), 35, 25 * (i + 2) - 5);
-			
+
 			g.drawLine(5, 25 * (i + 2), 70, 25 * (i + 2));
 		}
 	}
@@ -177,7 +194,7 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 
 	public static void removeEntity(Entity e)
 	{
-		entities.remove(e);
+		entitiesToRemove.add(e);
 	}
 
 	public static void togglePause()

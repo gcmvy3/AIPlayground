@@ -6,11 +6,11 @@ import java.util.Random;
 
 public class Drone extends Entity
 {	
-	private final int SPEED = 3;
+	private final int SPEED = 2;
 	private final double MAX_HEALTH = 160;
 	private final double DAMAGE = 5;
-	private final double AGGRO_RANGE = 400;
-	private final double FOOD_RANGE = 400;
+	private final double AGGRO_RANGE = 250;
+	private final double FOOD_RANGE = 250;
 	private final double SPEED_REDUCTION = 0.80;
 
 	private int turnCounter;
@@ -275,36 +275,18 @@ public class Drone extends Entity
 
 		xVelocity = SPEED * Math.cos(angleToTarget);
 		yVelocity = -SPEED * Math.sin(angleToTarget);
+		
+		//Adds a sort of wibbly effect
+		//xVelocity += (random.nextDouble() * (SPEED * 2)) - SPEED;
+		//yVelocity += (random.nextDouble() * (SPEED * 2)) - SPEED;
 	}
 
 	public double calcAngleTo(Entity target)
 	{
-		double targetAngleInRadians;
-
 		double xDifference = getXDistanceFrom(target);
 		double yDifference = getYDistanceFrom(target);
 
-		if(xDifference < 0)
-		{
-			targetAngleInRadians = Math.PI + Math.atan(-yDifference / xDifference);
-		}
-		else if(xDifference > 0)
-		{
-			targetAngleInRadians = Math.atan(-yDifference / xDifference);
-		}
-		else
-		{
-			if(yDifference > 0)
-			{
-				targetAngleInRadians = Math.PI / 2;
-			}
-			else
-			{
-				targetAngleInRadians = -Math.PI / 2;
-			}
-		}
-
-		return targetAngleInRadians;
+		return Math.atan2(-yDifference, xDifference);
 	}
 
 	public void randomMovement()
