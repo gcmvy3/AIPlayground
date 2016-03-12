@@ -12,6 +12,7 @@ import javax.swing.Timer;
 
 /*
  * This class is a modified JPanel that runs a game timer and draws the graphics
+ *
  */
 
 public class GamePanel extends JPanel implements ActionListener, Runnable
@@ -50,7 +51,7 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 		setPreferredSize(new Dimension(panelWidth, panelHeight));
 		setFocusable(true);
 
-		controller = new Controller();
+		controller = new Controller(); // For handling I/O
 
 		addKeyListener(controller);
 		addMouseListener(controller);
@@ -71,6 +72,7 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 		timer.start();
 	}
 
+	// Call this to initialize or reinitialize the game world
 	public static void resetWorld()
 	{
 		entities = new ArrayList<Entity>();
@@ -143,7 +145,7 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 
 	public void spawnFood()
 	{
-		int bufferZone = 25;
+		int bufferZone = 25; // Prevents food from spawning too close to the edge
 
 		if(random.nextBoolean())
 		{
@@ -165,6 +167,12 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 			entity.draw(g);
 		}
 
+		drawScoreBoard(g);
+	}
+
+	// Draws a "scoreboard" in the corner that displays the drone count for each faction
+	public void drawScoreBoard(Graphics g)
+	{
 		g.setColor(Color.BLACK);
 		g.drawLine(5, 25, 70, 25);
 
@@ -181,7 +189,7 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 			g.drawLine(5, 25 * (i + 2), 70, 25 * (i + 2));
 		}
 	}
-
+	
 	public static ArrayList<Entity> getEntities()
 	{
 		return entities;
@@ -199,6 +207,7 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 
 	public static void togglePause()
 	{
+		// Pauses and unpauses the game
 		if(isPaused)
 		{
 			isPaused = false;
@@ -211,6 +220,7 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 
 	public static void toggleFoodSpawn()
 	{
+		// Toggles whether food randomly spawns around the map
 		if(foodSpawn)
 		{
 			foodSpawn = false;
@@ -223,6 +233,7 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 
 	public static void toggleGreenFaction()
 	{
+		// Adds an optional third faction
 		if(greenFaction)
 		{
 			greenFaction = false;

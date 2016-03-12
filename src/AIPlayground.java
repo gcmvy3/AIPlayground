@@ -5,7 +5,7 @@ import java.awt.Color;
 import javax.swing.JFrame;
 
 /*
- * This is your runner class. Your main() method is located here.
+ * Launcher class. Creates a window and starts the game.
  */
 
 public class AIPlayground

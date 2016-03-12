@@ -2,8 +2,12 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 
+// When provided with food, a queen will spawn a drone
+// Queens currently cannot be killed
+
 public class Queen extends Entity
 {
+	// Amount of food the queen has stockpiled. Each food will spawn one drone
 	private int foodCount = 5;
 
 	public Queen(double xPos, double yPos, Faction f)
@@ -36,6 +40,7 @@ public class Queen extends Entity
 
 	public void spawnDrones()
 	{
+		//Spawn a drone if the foodcount is above a certain threshold
 		if(foodCount > 2)
 		{
 			Drone newDrone = new Drone(xPosition, yPosition, faction);
@@ -55,6 +60,7 @@ public class Queen extends Entity
 		}
 	}
 	
+	// Called when a drone brings food to the queen
 	public void giveFood()
 	{
 		foodCount++;

@@ -10,6 +10,7 @@ import java.awt.event.MouseListener;
 
 public class Controller implements KeyListener, MouseListener
 {
+	// A boolean array that keeps track of which keys are currently pressed 
 	boolean[] keys = new boolean[255];
 
 	//	-Assign ASCII key codes to variables to make the code more readable
@@ -23,6 +24,7 @@ public class Controller implements KeyListener, MouseListener
 
 	private String entityType = "Food";
 
+	// Registers when a key is pressed or released and updates the boolean array
 	public void keyPressed(KeyEvent e) 
 	{
 		keys[e.getKeyCode()] = true;
@@ -35,7 +37,7 @@ public class Controller implements KeyListener, MouseListener
 
 	public void keyTyped(KeyEvent e) {}
 
-
+	// Handles mouse input
 	public void mouseClicked(MouseEvent event)
 	{
 		if(entityType.equals("Food"))
@@ -57,7 +59,9 @@ public class Controller implements KeyListener, MouseListener
 	public void mousePressed(MouseEvent arg0) {}
 	public void mouseReleased(MouseEvent arg0) {}
 
-	public void update() //This function is called from GamePanel's actionPerformed() method
+	// Checks if important keys are pressed and performs the appropriate action if they are
+	// This function is called from GamePanel's actionPerformed() method
+	public void update()
 	{	
 		if(keys[ENTER])
 		{

@@ -3,9 +3,15 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Random;
 
+// Drones are created by Queens and will behave in a predetermined way
+// Current Drone priorities:
+// 1. Gather food
+// 2. Combat
+// 3. Wander
 
 public class Drone extends Entity
 {	
+	// Predefined attributes of drones
 	private final int SPEED = 2;
 	private final double MAX_HEALTH = 160;
 	private final double DAMAGE = 5;
@@ -43,7 +49,8 @@ public class Drone extends Entity
 		Color outlineColor;
 		
 		g.setColor(faction.getColor());
-
+		
+		// If the drone is dead, color it solid black
 		if(isDead)
 		{
 			g.setColor(Color.black);
@@ -51,6 +58,7 @@ public class Drone extends Entity
 
 		g.fillRect((int)xPosition - (width / 2), (int)yPosition - (height / 2), width, height);
 
+		// If the drone is aggroed, give it a white outline
 		if(isFighting)
 		{
 			outlineColor = Color.white;
@@ -63,6 +71,7 @@ public class Drone extends Entity
 		g.setColor(outlineColor);
 		g.drawRect((int)xPosition - (width / 2), (int)yPosition - (height / 2), width, height);
 
+		// If the drone is carrying food, draw a visual indication
 		if(hasFood)
 		{
 			drawFood(g);
@@ -71,6 +80,7 @@ public class Drone extends Entity
 
 	public void drawFood(Graphics g)
 	{
+		// Draws a small food icon in the center of the drone
 		g.setColor(Color.WHITE);
 		g.fillRect((int)xPosition - 2, (int)yPosition - 2, 5, 5);
 		g.setColor(Color.BLACK);
@@ -102,8 +112,10 @@ public class Drone extends Entity
 
 	public Queen getQueen()
 	{
+		// Gets a reference to the queen that created this drone
 		Queen queen = null;
 
+		// TODO: This could probably be done more elegantly
 		for(Entity e : GamePanel.getEntities())
 		{
 			if(e instanceof Queen)
@@ -192,6 +204,7 @@ public class Drone extends Entity
 	
 	public boolean isNearFood()
 	{
+		// Returns true if there is food within a predetermined range
 		for(Entity e : GamePanel.getEntities())
 		{
 			if(e instanceof Food)

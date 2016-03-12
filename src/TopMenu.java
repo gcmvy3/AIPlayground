@@ -9,6 +9,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JRadioButton;
 
+// TopMenu is a custom JMenuBar that appears at the top of the screen
+// TODO: Clean and comment this class
 
 public class TopMenu extends JMenuBar
 {
