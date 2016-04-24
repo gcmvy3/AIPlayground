@@ -94,8 +94,6 @@ public class Drone extends Entity
 
 		if(!isDead)
 		{
-			queen = getQueen();
-
 			decideBehavior();
 
 			bounceOffEdges();
@@ -109,29 +107,6 @@ public class Drone extends Entity
 			}
 		}
 	}
-
-	public Queen getQueen()
-	{
-		// Gets a reference to the queen that created this drone
-		Queen queen = null;
-
-		// TODO: This could probably be done more elegantly
-		for(Entity e : GamePanel.getEntities())
-		{
-			if(e instanceof Queen)
-			{
-				Queen possibleQueen = (Queen)e;
-
-				if(possibleQueen.getFaction().equals(faction))
-				{
-					queen = possibleQueen;
-				}
-			}
-		}
-
-		return queen;
-	}
-
 
 	public void decideBehavior()
 	{
@@ -369,5 +344,16 @@ public class Drone extends Entity
 	public boolean isDead()
 	{
 		return isDead;
+	}
+	
+	public Queen getQueen()
+	{
+		return queen;
+	}
+	
+	public void setQueen(Queen q)
+	{
+		// Should be called when the drone is created
+		queen = q;
 	}
 }

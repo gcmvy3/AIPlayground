@@ -47,6 +47,7 @@ public class TopMenu extends JMenuBar
 	
 	public void initCreateButtons()
 	{
+		// Button for creating food
 		foodButton = new JMenuItem("Food");
 		foodButton.addActionListener(new ActionListener()
 		{
@@ -55,6 +56,7 @@ public class TopMenu extends JMenuBar
 			}
 		});		
 		
+		// Button for creating a drone
 		droneButton = new JMenuItem("Drone");
 		droneButton.addActionListener(new ActionListener()
 		{
@@ -63,7 +65,7 @@ public class TopMenu extends JMenuBar
 			}
 		});		
 		
-		
+		// A radio button to choose a faction
 		ActionListener factionListener = new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -88,6 +90,7 @@ public class TopMenu extends JMenuBar
 	
 	public void initOptionsButtons()
 	{		
+		// Toggles whether or not to spawn food randomly
 		foodCheckBox = new JCheckBox("Spawn Food");
 		foodCheckBox.addActionListener(new ActionListener()
 		{
@@ -97,6 +100,7 @@ public class TopMenu extends JMenuBar
 			}
 		});
 		
+		// Toggles a third, green faction in the middle
 		greenFactionCheckBox = new JCheckBox("Green Faction");
 		greenFactionCheckBox.addActionListener(new ActionListener()
 		{
@@ -106,6 +110,7 @@ public class TopMenu extends JMenuBar
 			}
 		});
 		
+		// TBD
 		hiveMindCheckBox = new JCheckBox("Hive Mind");
 		hiveMindCheckBox.addActionListener(new ActionListener()
 		{
@@ -116,6 +121,7 @@ public class TopMenu extends JMenuBar
 			}
 		});
 		
+		// Pauses and unpauses the game
 		pauseCheckBox = new JCheckBox("Pause");
 		pauseCheckBox.addActionListener(new ActionListener()
 		{
@@ -125,6 +131,7 @@ public class TopMenu extends JMenuBar
 			}
 		});
 		
+		// Removes all entities and starts over
 		resetButton = new JMenuItem("Reset");
 		resetButton.addActionListener(new ActionListener()
 		{
@@ -135,6 +142,7 @@ public class TopMenu extends JMenuBar
 		});
 	}
 	
+	// Initializes the submenus
 	public void initMenus()
 	{
 		initCreateMenu();
@@ -144,6 +152,7 @@ public class TopMenu extends JMenuBar
 		this.add(optionsMenu);
 	}
 	
+	// Creates a submenu for adding things to the map
 	public void initCreateMenu()
 	{
 		createMenu = new JMenu("Create");
@@ -156,7 +165,9 @@ public class TopMenu extends JMenuBar
 		createMenu.add(factionMenu);
 	}
 
-	public void initFactionMenu(){
+	// Creates a submenu for selecting a faction
+	public void initFactionMenu()
+	{
 		factionMenu = new JMenu("Faction");
 
 		factionButtons.add(redButton);
@@ -168,7 +179,9 @@ public class TopMenu extends JMenuBar
 		factionMenu.add(blueButton);
 	}	
 	
-	public void initOptionsMenu(){
+	// Creates a new menu and adds the option buttons to it
+	public void initOptionsMenu()
+	{	
 		optionsMenu = new JMenu("Options");	
 		
 		optionsMenu.add(pauseCheckBox);

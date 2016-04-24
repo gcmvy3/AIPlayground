@@ -44,7 +44,7 @@ public class Queen extends Entity
 		if(foodCount > 2)
 		{
 			Drone newDrone = new Drone(xPosition, yPosition, faction);
-
+			newDrone.setQueen(this);
 			GamePanel.addEntity(newDrone);
 
 			foodCount -= 2;
@@ -54,7 +54,7 @@ public class Queen extends Entity
 			if(faction.getDroneCount() < 4)
 			{
 				Drone newDrone = new Drone(xPosition, yPosition, faction);
-
+				newDrone.setQueen(this);
 				GamePanel.addEntity(newDrone);
 			}
 		}
