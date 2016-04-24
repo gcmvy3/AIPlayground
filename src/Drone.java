@@ -12,12 +12,12 @@ import java.util.Random;
 public class Drone extends Entity
 {	
 	// Predefined attributes of drones
-	private final int SPEED = 2;
-	private final double MAX_HEALTH = 160;
-	private final double DAMAGE = 5;
-	private final double AGGRO_RANGE = 250;
-	private final double FOOD_RANGE = 250;
-	private final double SPEED_REDUCTION = 0.80;
+	private final int SPEED = 2;					// How fast the drone moves
+	private final double MAX_HEALTH = 160;			// How much health the drone has
+	private final double DAMAGE = 5;				// How much damage the drone deals to other drones
+	private final double AGGRO_RANGE = 250;			// The distance at which it will move to attack other drones
+	private final double FOOD_RANGE = 250;			// The distance at which it will move to collect food
+	private final double SPEED_REDUCTION = 0.80; 	// The speed modifier when carrying something (food)
 
 	private int turnCounter;
 	private double health = MAX_HEALTH;
@@ -56,7 +56,7 @@ public class Drone extends Entity
 			g.setColor(Color.black);
 		}
 
-		g.fillRect((int)xPosition - (width / 2), (int)yPosition - (height / 2), width, height);
+		g.fillRect((int)getXOrigin(), (int)getYOrigin(), (int)getWidth(), (int)getHeight());
 
 		// If the drone is aggroed, give it a white outline
 		if(isFighting)
@@ -69,7 +69,7 @@ public class Drone extends Entity
 		}
 		
 		g.setColor(outlineColor);
-		g.drawRect((int)xPosition - (width / 2), (int)yPosition - (height / 2), width, height);
+		g.drawRect((int)getXOrigin(), (int)getYOrigin(), (int)getWidth(), (int)getHeight());
 
 		// If the drone is carrying food, draw a visual indication
 		if(hasFood)
@@ -80,11 +80,13 @@ public class Drone extends Entity
 
 	public void drawFood(Graphics g)
 	{
+		int foodSize = 6;
+		
 		// Draws a small food icon in the center of the drone
 		g.setColor(Color.WHITE);
-		g.fillRect((int)xPosition - 2, (int)yPosition - 2, 5, 5);
+		g.fillRect((int)xPosition - foodSize / 2, (int)yPosition - foodSize / 2, foodSize, foodSize);
 		g.setColor(Color.BLACK);
-		g.drawRect((int)xPosition - 2, (int)yPosition - 2, 5, 5);
+		g.drawRect((int)xPosition - foodSize / 2, (int)yPosition - foodSize / 2, foodSize, foodSize);
 	}
 
 	public void act()
@@ -140,7 +142,7 @@ public class Drone extends Entity
 		}
 		else
 		{
-			double angleToTarget = calcAngleTo(queen);
+			double angleToTarget = getAngleTo(queen);
 
 			xVelocity = (SPEED * Math.cos(angleToTarget)) * SPEED_REDUCTION;
 			yVelocity = (-SPEED * Math.sin(angleToTarget)) * SPEED_REDUCTION;
@@ -259,7 +261,7 @@ public class Drone extends Entity
 
 	public void moveTowards(Entity target)
 	{
-		double angleToTarget = calcAngleTo(target);
+		double angleToTarget = getAngleTo(target);
 
 		xVelocity = SPEED * Math.cos(angleToTarget);
 		yVelocity = -SPEED * Math.sin(angleToTarget);
@@ -269,15 +271,7 @@ public class Drone extends Entity
 		//yVelocity += (random.nextDouble() * (SPEED * 2)) - SPEED;
 	}
 
-	public double calcAngleTo(Entity target)
-	{
-		double xDifference = getXDistanceFrom(target);
-		double yDifference = getYDistanceFrom(target);
-
-		return Math.atan2(-yDifference, xDifference);
-	}
-
-	public void randomMovement()
+	public void randomMovement() // Moves the drone in a random direction
 	{
 		if(turnCounter >= 40)
 		{
@@ -292,7 +286,7 @@ public class Drone extends Entity
 		}
 	}
 
-	public void bounceOffEdges()
+	public void bounceOffEdges() // Contains the drone within the game area
 	{
 		int panelWidth = GamePanel.getPanelWidth();
 		int panelHeight = GamePanel.getPanelHeight();

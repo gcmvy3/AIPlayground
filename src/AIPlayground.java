@@ -23,7 +23,7 @@ public class AIPlayground
 	{	
 		initializeWindow();
 		
-		addGamePanel();
+		initializeGamePanel();
 		
 		startGame();
 	}
@@ -41,7 +41,7 @@ public class AIPlayground
 		mainWindow.setVisible(true);
 	}
 	
-	public static void addGamePanel()	//Creates a new GamePanel
+	public static void initializeGamePanel()	//Creates a new GamePanel and adds it to the JFrame
 	{
 		gamePanel = new GamePanel(windowWidth, windowHeight);
 

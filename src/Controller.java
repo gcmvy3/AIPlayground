@@ -13,13 +13,7 @@ public class Controller implements KeyListener, MouseListener
 	// A boolean array that keeps track of which keys are currently pressed 
 	boolean[] keys = new boolean[255];
 
-	//	-Assign ASCII key codes to variables to make the code more readable
-
-	final int W = 87;
-	final int A = 65;
-	final int S = 83;
-	final int D = 68;
-
+	// Assign ASCII key codes to variables to make the code more readable
 	final int ENTER = 10;
 
 	private String entityType = "Food";
@@ -40,6 +34,7 @@ public class Controller implements KeyListener, MouseListener
 	// Handles mouse input
 	public void mouseClicked(MouseEvent event)
 	{
+		// Adds an instance of the currently selected entity
 		if(entityType.equals("Food"))
 		{
 			GamePanel.addEntity(new Food(event.getX(), event.getY()));

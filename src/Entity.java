@@ -14,15 +14,18 @@ import java.awt.image.BufferedImage;
 
 public abstract class Entity
 {
+	// Position, measured from the center of the object
 	protected double xPosition;
 	protected double yPosition;
 	
 	protected int width;
 	protected int height;
 	
-	protected double centerXPosition;
-	protected double centerYPosition;
+	// X and Y coordinates for the TOP LEFT of the entity
+	protected double xOrigin;
+	protected double yOrigin;
 	
+	// Used for physics calculations
 	protected double mass;
 	
 	protected double xVelocity;
@@ -54,13 +57,13 @@ public abstract class Entity
 		return mass;
 	}
 	
-	public Rectangle getBounds()
+	public Rectangle getBounds() // Returns a rectangle object that surrounds the entity
 	{
 		bounds = new Rectangle ((int)xPosition - (width / 2), (int)yPosition - (height / 2), width, height);
 		return bounds;
 	}
 	
-	public double getDistanceFrom(Entity e)
+	public double getDistanceFrom(Entity e)	
 	{
 		double xDiff = getXDistanceFrom(e);
 		double yDiff = getYDistanceFrom(e);
@@ -136,6 +139,24 @@ public abstract class Entity
 	public void setFaction(Faction f)
 	{
 		faction = f;
+	}
+	
+	public double getXOrigin()
+	{
+		return getXPosition() - getWidth() / 2;
+	}
+	
+	public double getYOrigin()
+	{
+		return getYPosition() - getHeight() / 2;
+	}
+	
+	public double getAngleTo(Entity target) // Returns the angle to another entity in radians
+	{
+		double xDifference = getXDistanceFrom(target);
+		double yDifference = getYDistanceFrom(target);
+
+		return Math.atan2(-yDifference, xDifference);
 	}
 	
 	public boolean isTouching(Entity e)
