@@ -25,7 +25,6 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 
 	private static boolean foodSpawn;
 	private static boolean isPaused;
-	private static boolean greenFaction;
 
 	private static Random random = new Random();
 
@@ -40,7 +39,6 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 	private static List<Entity> entitiesToRemove = new ArrayList<Entity>();
 
 	private static ArrayList<Faction> factions = new ArrayList<Faction>();
-
 	
 	public GamePanel(int x, int y)
 	{	
@@ -81,30 +79,17 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 		factions.add(new Faction("Red", Color.RED));
 		factions.add(new Faction("Blue", Color.BLUE));
 		
-		initializeActors();
+		initializeEntities();
 		AIPlayground.topMenu.updateFactions();
 	}
 
-	public static void initializeActors()
+	public static void initializeEntities()
 	{
 		Queen redQueen;
 		Queen blueQueen;
-		Queen greenQueen;
 
-		if(greenFaction)
-		{
-			factions.add(new Faction("Green", Color.GREEN));
-
-			redQueen = new Queen(20, 600, factions.get(0));
-			blueQueen = new Queen(panelWidth - 20, 600, factions.get(1));
-			greenQueen = new Queen(panelWidth / 2, 20, factions.get(2));
-			addEntity(greenQueen);
-		}
-		else
-		{
-			redQueen = new Queen(20, 300, factions.get(0));
-			blueQueen = new Queen(panelWidth - 20, 300, factions.get(1));
-		}
+		redQueen = new Queen(20, 300, factions.get(0));
+		blueQueen = new Queen(panelWidth - 20, 300, factions.get(1));
 
 		addEntity(redQueen);
 		addEntity(blueQueen);
@@ -233,21 +218,6 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 		else
 		{
 			foodSpawn = true;
-		}
-	}
-
-	public static void toggleGreenFaction()
-	{
-		// Adds an optional third faction
-		if(greenFaction)
-		{
-			greenFaction = false;
-			resetWorld();
-		}
-		else
-		{
-			greenFaction = true;
-			resetWorld();
 		}
 	}
 

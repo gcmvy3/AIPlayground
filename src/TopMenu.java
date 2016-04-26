@@ -26,7 +26,6 @@ public class TopMenu extends JMenuBar
 	static JCheckBox hiveMindCheckBox;
 	static JCheckBox pauseCheckBox;
 	static JCheckBox foodCheckBox;
-	static JCheckBox greenFactionCheckBox;
 
 	static ButtonGroup entityTypeButtonGroup = new ButtonGroup();
 	
@@ -91,16 +90,6 @@ public class TopMenu extends JMenuBar
 			public void actionPerformed(ActionEvent e)
 			{
 				GamePanel.toggleFoodSpawn();
-			}
-		});
-
-		// Toggles a third, green faction in the middle
-		greenFactionCheckBox = new JCheckBox("Green Faction");
-		greenFactionCheckBox.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				GamePanel.toggleGreenFaction();
 			}
 		});
 
@@ -183,7 +172,6 @@ public class TopMenu extends JMenuBar
 
 		optionsMenu.add(pauseCheckBox);
 		optionsMenu.add(foodCheckBox);
-		optionsMenu.add(greenFactionCheckBox);
 		optionsMenu.add(hiveMindCheckBox);
 		optionsMenu.addSeparator();
 		optionsMenu.add(resetButton);
