@@ -12,7 +12,7 @@ public class AIPlayground
 {
 	private static BorderLayout mainLayout = new BorderLayout();
 	
-	private static JFrame mainWindow = new JFrame("Template");
+	private static JFrame mainWindow = new JFrame("AI Playground");
 
 	private static GamePanel gamePanel;
 	
