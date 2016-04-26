@@ -13,10 +13,10 @@ public class Drone extends Entity
 {	
 	// Predefined attributes of drones
 	private final int SPEED = 2;					// How fast the drone moves
-	private final double MAX_HEALTH = 160;			// How much health the drone has
-	private final double DAMAGE = 5;				// How much damage the drone deals to other drones
-	private final double AGGRO_RANGE = 250;			// The distance at which it will move to attack other drones
-	private final double FOOD_RANGE = 250;			// The distance at which it will move to collect food
+	private final int MAX_HEALTH = 160;				// How much health the drone has
+	private final int BASE_DAMAGE = 5;				// How much damage the drone deals to other drones
+	private final int AGGRO_RANGE = 250;			// The distance at which it will move to attack other drones
+	private final int FOOD_RANGE = 250;				// The distance at which it will move to collect food
 	private final double SPEED_REDUCTION = 0.80; 	// The speed modifier when carrying something (food)
 
 	private int turnCounter;
@@ -202,9 +202,9 @@ public class Drone extends Entity
 
 		if(getDistanceFrom(enemy) <= 6)
 		{
-			double damageModifier = random.nextDouble() * DAMAGE;
+			double damageModifier = random.nextDouble() * BASE_DAMAGE;
 			
-			enemy.takeDamage(DAMAGE + damageModifier);
+			enemy.takeDamage(BASE_DAMAGE + damageModifier);
 		}
 	}
 
@@ -267,8 +267,8 @@ public class Drone extends Entity
 		yVelocity = -SPEED * Math.sin(angleToTarget);
 		
 		//Adds a sort of wibbly effect
-		//xVelocity += (random.nextDouble() * (SPEED * 2)) - SPEED;
-		//yVelocity += (random.nextDouble() * (SPEED * 2)) - SPEED;
+		xVelocity += (random.nextDouble() * (SPEED * 2)) - SPEED;
+		yVelocity += (random.nextDouble() * (SPEED * 2)) - SPEED;
 	}
 
 	public void randomMovement() // Moves the drone in a random direction
