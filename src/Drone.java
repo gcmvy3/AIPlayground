@@ -267,8 +267,8 @@ public class Drone extends Entity
 		yVelocity = -SPEED * Math.sin(angleToTarget);
 		
 		//Adds a sort of wibbly effect
-		xVelocity += (random.nextDouble() * (SPEED * 2)) - SPEED;
-		yVelocity += (random.nextDouble() * (SPEED * 2)) - SPEED;
+		//xVelocity += (random.nextDouble() * (SPEED * 2)) - SPEED;
+		//yVelocity += (random.nextDouble() * (SPEED * 2)) - SPEED;
 	}
 
 	public void randomMovement() // Moves the drone in a random direction
