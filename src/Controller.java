@@ -42,7 +42,7 @@ public class Controller implements KeyListener, MouseListener
 		}
 		else if(TopMenu.entityType.equals("Drone"))
 		{
-			GamePanel.addEntity(new Drone(event.getX(), event.getY(), TopMenu.currentFaction));
+			GamePanel.addEntity(new Drone(event.getX(), event.getY(), TopMenu.currentQueen));
 		}
 		else if(TopMenu.entityType.equals("Queen"))
 		{
@@ -55,11 +55,11 @@ public class Controller implements KeyListener, MouseListener
 			
 			Color randomColor = new Color(r, g, b);
 			
-			int factionNumber = GamePanel.getNumFactions() + 1;
+			int factionNumber = GamePanel.getNumQueens() + 1;
 			
 			String factionName = "Faction" + factionNumber;
 			
-			GamePanel.addEntity(new Queen(event.getX(), event.getY(), GamePanel.createFaction(randomColor, factionName)));
+			GamePanel.addEntity(new Queen(event.getX(), event.getY(), randomColor, factionName));
 		}
 	}
 

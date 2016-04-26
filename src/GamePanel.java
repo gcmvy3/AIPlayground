@@ -38,7 +38,7 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 	// Entities that will be deleted at the end of the step
 	private static List<Entity> entitiesToRemove = new ArrayList<Entity>();
 
-	private static ArrayList<Faction> factions = new ArrayList<Faction>();
+	private static ArrayList<Queen> queens = new ArrayList<Queen>();
 	
 	public GamePanel(int x, int y)
 	{	
@@ -74,11 +74,8 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 	{
 		entities = new ArrayList<Entity>();
 
-		factions = new ArrayList<Faction>();
+		queens = new ArrayList<Queen>();
 
-		factions.add(new Faction("Red", Color.RED));
-		factions.add(new Faction("Blue", Color.BLUE));
-		
 		initializeEntities();
 		AIPlayground.topMenu.updateFactions();
 	}
@@ -87,12 +84,12 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 	{
 		Queen redQueen;
 		Queen blueQueen;
+		
+		redQueen = new Queen(20, 300, Color.RED, "Red");
+		blueQueen = new Queen(panelWidth - 20, 300, Color.BLUE, "Blue");
 
-		redQueen = new Queen(20, 300, factions.get(0));
-		blueQueen = new Queen(panelWidth - 20, 300, factions.get(1));
-
-		addEntity(redQueen);
-		addEntity(blueQueen);
+		addQueen(redQueen);
+		addQueen(blueQueen);
 	}
 
 
@@ -161,15 +158,15 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 		g.setColor(Color.BLACK);
 		g.drawLine(5, 25, 70, 25);
 
-		for(int i = 0; i < factions.size(); i++)
+		for(int i = 0; i < queens.size(); i++)
 		{
-			Faction f = factions.get(i);
+			Queen q = queens.get(i);
 
-			g.setColor(f.getColor());
+			g.setColor(q.getColor());
 			g.fillRect(5, 25 * (i + 1), 25, 25);
 			g.setColor(Color.BLACK);
 			g.drawRect(5, 25 * (i + 1), 25, 25);
-			g.drawString("" + f.getDroneCount(), 35, 25 * (i + 2) - 5);
+			g.drawString("" + q.getDroneCount(), 35, 25 * (i + 2) - 5);
 
 			g.drawLine(5, 25 * (i + 2), 70, 25 * (i + 2));
 		}
@@ -190,9 +187,9 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 		entitiesToRemove.add(e);
 	}
 	
-	public static ArrayList<Faction> getFactions()
+	public static ArrayList<Queen> getQueens()
 	{
-		return factions;
+		return queens;
 	}
 
 	public static void togglePause()
@@ -231,16 +228,15 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 		return panelHeight;
 	}
 	
-	public static int getNumFactions()
+	public static int getNumQueens()
 	{
-		return factions.size();
+		return queens.size();
 	}
 	
-	public static Faction createFaction(Color c, String s)
+	public static void addQueen(Queen q) // Adds a queen to the world
 	{
-		Faction f = new Faction(s, c);
-		factions.add(f);
+		queens.add(q);
+		entities.add(q);
 		AIPlayground.topMenu.updateFactions();	
-		return f;
 	}
 }

@@ -35,7 +35,7 @@ public class TopMenu extends JMenuBar
 	
 	static JMenuItem resetButton;
 
-	static Faction currentFaction;
+	static Queen currentQueen;
 	
 	static String entityType = "Food";
 
@@ -179,7 +179,7 @@ public class TopMenu extends JMenuBar
 
 	public void updateFactions() // Updates the faction list to reflect the current factions
 	{
-		currentFaction = GamePanel.getFactions().get(0);
+		currentQueen = GamePanel.getQueens().get(0);
 		
 		factionMenu.removeAll();
 		initFactionButtons();
@@ -207,13 +207,13 @@ public class TopMenu extends JMenuBar
 				Object source = e.getSource();
 				JRadioButton sourceButton = (JRadioButton)source;
 
-				currentFaction = GamePanel.getFactions().get(0);
+				currentQueen = GamePanel.getQueens().get(0);
 				
-				for(Faction f : GamePanel.getFactions())
+				for(Queen q : GamePanel.getQueens())
 				{
-					if(f.getName().equals(sourceButton.getText()))
+					if(q.getName().equals(sourceButton.getText()))
 					{
-						currentFaction = f;
+						currentQueen = q;
 						break;
 					}
 				}
@@ -223,9 +223,9 @@ public class TopMenu extends JMenuBar
 		factionButtons = new ArrayList<JRadioButton>();
 		factionButtonGroup = new ButtonGroup();
 
-		for(Faction f : GamePanel.getFactions())
+		for(Queen q : GamePanel.getQueens())
 		{
-			JRadioButton factionButton = new JRadioButton(f.getName());
+			JRadioButton factionButton = new JRadioButton(q.getName());
 			factionButton.addActionListener(factionListener);
 			factionButtons.add(factionButton);
 			factionButtonGroup.add(factionButton);

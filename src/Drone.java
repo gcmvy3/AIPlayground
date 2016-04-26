@@ -12,15 +12,17 @@ import java.util.Random;
 public class Drone extends Entity
 {	
 	// Predefined attributes of drones
-	private final int SPEED = 2;					// How fast the drone moves
-	private final int MAX_HEALTH = 160;				// How much health the drone has
-	private final int BASE_DAMAGE = 5;				// How much damage the drone deals to other drones
-	private final int AGGRO_RANGE = 250;			// The distance at which it will move to attack other drones
-	private final int FOOD_RANGE = 250;				// The distance at which it will move to collect food
-	private final double SPEED_REDUCTION = 0.80; 	// The speed modifier when carrying something (food)
+	private int speed = 2;					// How fast the drone moves
+	private int maxHealth = 160;			// How much health the drone has
+	private int baseDamage = 5;				// How much damage the drone deals to other drones
+	private int aggroRange = 250;			// The distance at which it will move to attack other drones
+	private int foodRange = 250;			// The distance at which it will move to collect food
+	private double speedReduction = 0.80; 	// The speed modifier when carrying something (food)
 
+	String seed;
+	
 	private int turnCounter;
-	private double health = MAX_HEALTH;
+	private double health = maxHealth;
 	private boolean hasFood;
 	private boolean isFighting;
 	private boolean isDead;
@@ -29,26 +31,24 @@ public class Drone extends Entity
 
 	private Drone enemy;
 
-	private Queen queen;
-
-	public Drone(double x, double y, Faction f)
+	protected Queen queen;
+	
+	public Drone(double x, double y, Queen q)
 	{
 		xPosition = x;
 		yPosition = y;
 
-		faction = f;
+		queen = q;
 
 		width = 12;
 		height = 12;
-		
-		faction.addDrone(this);
 	}
 
 	public void draw(Graphics g)
 	{
 		Color outlineColor;
 		
-		g.setColor(faction.getColor());
+		g.setColor(queen.getColor());
 		
 		// If the drone is dead, color it solid black
 		if(isDead)
@@ -137,15 +137,16 @@ public class Drone extends Entity
 	{
 		if(isTouching(queen))
 		{
-			queen.giveFood();
+			queen.incrementFood();
 			hasFood = false;
 		}
 		else
 		{
+			// The drone moves slower when carrying food
 			double angleToTarget = getAngleTo(queen);
 
-			xVelocity = (SPEED * Math.cos(angleToTarget)) * SPEED_REDUCTION;
-			yVelocity = (-SPEED * Math.sin(angleToTarget)) * SPEED_REDUCTION;
+			xVelocity = (speed * Math.cos(angleToTarget)) * speedReduction;
+			yVelocity = (-speed * Math.sin(angleToTarget)) * speedReduction;
 		}
 	}
 
@@ -159,7 +160,7 @@ public class Drone extends Entity
 			{
 				Drone d = (Drone) e;
 
-				if(getDistanceFrom(d) <= AGGRO_RANGE && (!d.getFaction().equals(faction)) && (!d.isDead()))
+				if(getDistanceFrom(d) <= aggroRange && (!d.getQueen().equals(queen)) && (!d.isDead()))
 				{
 					if(!foundEnemy)
 					{
@@ -186,7 +187,7 @@ public class Drone extends Entity
 		{
 			if(e instanceof Food)
 			{
-				if(getDistanceFrom(e) <= FOOD_RANGE)
+				if(getDistanceFrom(e) <= foodRange)
 				{
 					return true;
 				}
@@ -202,9 +203,9 @@ public class Drone extends Entity
 
 		if(getDistanceFrom(enemy) <= 6)
 		{
-			double damageModifier = random.nextDouble() * BASE_DAMAGE;
+			double damageModifier = random.nextDouble() * baseDamage;
 			
-			enemy.takeDamage(BASE_DAMAGE + damageModifier);
+			enemy.takeDamage(baseDamage + damageModifier);
 		}
 	}
 
@@ -263,8 +264,8 @@ public class Drone extends Entity
 	{
 		double angleToTarget = getAngleTo(target);
 
-		xVelocity = SPEED * Math.cos(angleToTarget);
-		yVelocity = -SPEED * Math.sin(angleToTarget);
+		xVelocity = speed * Math.cos(angleToTarget);
+		yVelocity = -speed * Math.sin(angleToTarget);
 		
 		//Adds a sort of wibbly effect
 		//xVelocity += (random.nextDouble() * (SPEED * 2)) - SPEED;
@@ -276,8 +277,8 @@ public class Drone extends Entity
 		if(turnCounter >= 40)
 		{
 			Random random = new Random();
-			int randXVel = (random.nextInt(SPEED + SPEED + 1) - SPEED);
-			int randYVel = (random.nextInt(SPEED + SPEED + 1) - SPEED);
+			int randXVel = (random.nextInt(speed + speed + 1) - speed);
+			int randYVel = (random.nextInt(speed + speed + 1) - speed);
 
 			xVelocity = randXVel;
 			yVelocity = randYVel;
@@ -332,7 +333,7 @@ public class Drone extends Entity
 	public void destroy()
 	{
 		GamePanel.removeEntity(this);
-		faction.removeDrone(this);
+		queen.removeDrone(this);
 	}
 
 	public boolean isDead()

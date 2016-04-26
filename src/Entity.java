@@ -14,6 +14,8 @@ import java.awt.image.BufferedImage;
 
 public abstract class Entity
 {
+	protected String genome;
+	
 	// Position, measured from the center of the object
 	protected double xPosition;
 	protected double yPosition;
@@ -30,8 +32,6 @@ public abstract class Entity
 	
 	protected double xVelocity;
 	protected double yVelocity;
-	
-	protected Faction faction = new Faction("None" ,Color.WHITE);
 	
 	protected Rectangle bounds;
 
@@ -130,17 +130,7 @@ public abstract class Entity
 	{
 		yVelocity = vY;
 	}
-	
-	public Faction getFaction()
-	{
-		return faction;
-	}
 
-	public void setFaction(Faction f)
-	{
-		faction = f;
-	}
-	
 	public double getXOrigin()
 	{
 		return getXPosition() - getWidth() / 2;
