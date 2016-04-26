@@ -82,7 +82,7 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 		factions.add(new Faction("Blue", Color.BLUE));
 		
 		initializeActors();
-		AIPlayground.topMenu.update();
+		AIPlayground.topMenu.updateFactions();
 	}
 
 	public static void initializeActors()
@@ -259,5 +259,18 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 	public static int getPanelHeight()
 	{
 		return panelHeight;
+	}
+	
+	public static int getNumFactions()
+	{
+		return factions.size();
+	}
+	
+	public static Faction createFaction(Color c, String s)
+	{
+		Faction f = new Faction(s, c);
+		factions.add(f);
+		AIPlayground.topMenu.updateFactions();	
+		return f;
 	}
 }

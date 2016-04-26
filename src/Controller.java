@@ -3,6 +3,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Random;
 
 /*
  * 	This class is used to listen for input from the keyboard and react accordingly
@@ -10,6 +11,8 @@ import java.awt.event.MouseListener;
 
 public class Controller implements KeyListener, MouseListener
 {
+	Random random = new Random();
+	
 	// A boolean array that keeps track of which keys are currently pressed 
 	boolean[] keys = new boolean[255];
 
@@ -43,7 +46,20 @@ public class Controller implements KeyListener, MouseListener
 		}
 		else if(TopMenu.entityType.equals("Queen"))
 		{
-			GamePanel.addEntity(new Queen(event.getX(), event.getY(), TopMenu.currentFaction));
+			// Generates a new faction with a random color and corresponding name
+			// Then adds a queen of that faction
+			
+			int r = random.nextInt(255);
+			int g = random.nextInt(255);
+			int b = random.nextInt(255);
+			
+			Color randomColor = new Color(r, g, b);
+			
+			int factionNumber = GamePanel.getNumFactions() + 1;
+			
+			String factionName = "Faction" + factionNumber;
+			
+			GamePanel.addEntity(new Queen(event.getX(), event.getY(), GamePanel.createFaction(randomColor, factionName)));
 		}
 	}
 

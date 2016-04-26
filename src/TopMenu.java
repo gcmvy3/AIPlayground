@@ -30,8 +30,9 @@ public class TopMenu extends JMenuBar
 
 	static ButtonGroup entityTypeButtonGroup = new ButtonGroup();
 	
-	static JRadioButton droneButton;
 	static JRadioButton foodButton;
+	static JRadioButton droneButton;
+	static JRadioButton queenButton;
 	
 	static JMenuItem resetButton;
 
@@ -74,6 +75,11 @@ public class TopMenu extends JMenuBar
 		droneButton = new JRadioButton("Drone");
 		droneButton.addActionListener(entityTypeListener);
 		entityTypeButtonGroup.add(droneButton);
+		
+		// Button for creating a queen and thus a new faction
+		queenButton = new JRadioButton("Queen");
+		queenButton.addActionListener(entityTypeListener);
+		entityTypeButtonGroup.add(queenButton);
 	}
 
 	public void initOptionsButtons()
@@ -146,6 +152,7 @@ public class TopMenu extends JMenuBar
 		createMenu = new JMenu("Create");
 		createMenu.add(foodButton);
 		createMenu.add(droneButton);
+		createMenu.add(queenButton);
 		createMenu.addSeparator();
 		
 		initFactionMenu();
@@ -181,14 +188,25 @@ public class TopMenu extends JMenuBar
 		optionsMenu.addSeparator();
 		optionsMenu.add(resetButton);
 	}
-	
-	public void update() // Updates the menu to reflect the current state of the GamePanel
+
+	public void updateFactions() // Updates the faction list to reflect the current factions
 	{
 		currentFaction = GamePanel.getFactions().get(0);
 		
-		this.removeAll();
-		this.initFactionButtons();
-		this.initMenus();
+		factionMenu.removeAll();
+		initFactionButtons();
+		
+		for(JRadioButton button : factionButtons)
+		{
+			factionMenu.add(button);
+		}
+
+		if(factionButtons.size() > 0)
+		{
+			factionButtons.get(0).setSelected(true);
+		}
+		
+		factionMenu.updateUI();
 	}
 	
 	private void initFactionButtons() // Updates the list of faction buttons to reflect the current factions
