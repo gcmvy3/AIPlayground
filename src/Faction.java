@@ -6,14 +6,17 @@ import java.util.ArrayList;
 
 public class Faction
 {
+	private String name;
+	
 	private Color color;
 	
 	private Queen queen;
 	
 	private ArrayList<Drone> drones = new ArrayList<Drone>();
 	
-	public Faction(Color c)
+	public Faction(String n, Color c)
 	{
+		name = n;
 		color = c;
 	}
 	
@@ -29,7 +32,7 @@ public class Faction
 	
 	public String getName()
 	{
-		return color.toString();
+		return name;
 	}
 	
 	public Color getColor()

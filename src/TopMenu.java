@@ -1,6 +1,7 @@
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
@@ -19,75 +20,62 @@ public class TopMenu extends JMenuBar
 	static JMenu createMenu, optionsMenu;
 	static JMenu factionMenu;
 
-	static ButtonGroup factionButtons = new ButtonGroup();
+	static ArrayList<JRadioButton> factionButtons = new ArrayList<JRadioButton>();
+	static ButtonGroup factionButtonGroup = new ButtonGroup();
 
 	static JCheckBox hiveMindCheckBox;
 	static JCheckBox pauseCheckBox;
 	static JCheckBox foodCheckBox;
 	static JCheckBox greenFactionCheckBox;
-	static JRadioButton redButton;
-	static JRadioButton blueButton;
+
+	static ButtonGroup entityTypeButtonGroup = new ButtonGroup();
 	
-	static JMenuItem droneButton;
-	static JMenuItem foodButton;
+	static JRadioButton droneButton;
+	static JRadioButton foodButton;
+	
 	static JMenuItem resetButton;
+
+	static Faction currentFaction;
 	
-	
+	static String entityType = "Food";
+
 	public TopMenu()
 	{
 		initButtons();
 		initMenus();
 	}
-	
+
 	public void initButtons()
 	{
 		initCreateButtons();
+		initFactionButtons();
 		initOptionsButtons();
 	}
-	
+
 	public void initCreateButtons()
 	{
-		// Button for creating food
-		foodButton = new JMenuItem("Food");
-		foodButton.addActionListener(new ActionListener()
+		ActionListener entityTypeListener = new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-			}
-		});		
-		
-		// Button for creating a drone
-		droneButton = new JMenuItem("Drone");
-		droneButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-			}
-		});		
-		
-		// A radio button to choose a faction
-		ActionListener factionListener = new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				if(e.getSource().equals(redButton))
-				{
-					//TODO: Wire this
-					//Faction = red
-				}
-				else if(e.getSource().equals(blueButton))
-				{
-					//Faction = blue
-				}
+				Object source = e.getSource();
+				JRadioButton sourceButton = (JRadioButton)source;
+				entityType = sourceButton.getText();
 			}
 		};
+		
+		// Button for creating food
+		foodButton = new JRadioButton("Food");
+		foodButton.addActionListener(entityTypeListener);
+		foodButton.setSelected(true);
+		entityTypeButtonGroup.add(foodButton);
 
-		redButton  = new JRadioButton("Red");
-		blueButton  = new JRadioButton("Blue");
-		redButton.addActionListener(factionListener);
-		blueButton.addActionListener(factionListener);
+		// Button for creating a drone
+		droneButton = new JRadioButton("Drone");
+		droneButton.addActionListener(entityTypeListener);
+		entityTypeButtonGroup.add(droneButton);
 	}
-	
+
 	public void initOptionsButtons()
 	{		
 		// Toggles whether or not to spawn food randomly
@@ -99,7 +87,7 @@ public class TopMenu extends JMenuBar
 				GamePanel.toggleFoodSpawn();
 			}
 		});
-		
+
 		// Toggles a third, green faction in the middle
 		greenFactionCheckBox = new JCheckBox("Green Faction");
 		greenFactionCheckBox.addActionListener(new ActionListener()
@@ -109,7 +97,7 @@ public class TopMenu extends JMenuBar
 				GamePanel.toggleGreenFaction();
 			}
 		});
-		
+
 		// TBD
 		hiveMindCheckBox = new JCheckBox("Hive Mind");
 		hiveMindCheckBox.addActionListener(new ActionListener()
@@ -120,7 +108,7 @@ public class TopMenu extends JMenuBar
 				//GamePanel.toggleHiveMind();
 			}
 		});
-		
+
 		// Pauses and unpauses the game
 		pauseCheckBox = new JCheckBox("Pause");
 		pauseCheckBox.addActionListener(new ActionListener()
@@ -130,7 +118,7 @@ public class TopMenu extends JMenuBar
 				GamePanel.togglePause();
 			}
 		});
-		
+
 		// Removes all entities and starts over
 		resetButton = new JMenuItem("Reset");
 		resetButton.addActionListener(new ActionListener()
@@ -141,54 +129,100 @@ public class TopMenu extends JMenuBar
 			}
 		});
 	}
-	
+
 	// Initializes the submenus
 	public void initMenus()
 	{
 		initCreateMenu();
 		initOptionsMenu();
-		
+
 		this.add(createMenu);
 		this.add(optionsMenu);
 	}
-	
+
 	// Creates a submenu for adding things to the map
-	public void initCreateMenu()
+	private void initCreateMenu()
 	{
 		createMenu = new JMenu("Create");
 		createMenu.add(foodButton);
-		createMenu.addSeparator();
 		createMenu.add(droneButton);
+		createMenu.addSeparator();
 		
 		initFactionMenu();
-		
+
 		createMenu.add(factionMenu);
 	}
 
 	// Creates a submenu for selecting a faction
-	public void initFactionMenu()
+	private void initFactionMenu()
 	{
 		factionMenu = new JMenu("Faction");
 
-		factionButtons.add(redButton);
-		factionButtons.add(blueButton);
+		for(JRadioButton button : factionButtons)
+		{
+			factionMenu.add(button);
+		}
 
-		redButton.setSelected(true);
-
-		factionMenu.add(redButton);
-		factionMenu.add(blueButton);
+		if(factionButtons.size() > 0)
+		{
+			factionButtons.get(0).setSelected(true);
+		}
 	}	
-	
+
 	// Creates a new menu and adds the option buttons to it
-	public void initOptionsMenu()
+	private void initOptionsMenu()
 	{	
 		optionsMenu = new JMenu("Options");	
-		
+
 		optionsMenu.add(pauseCheckBox);
 		optionsMenu.add(foodCheckBox);
 		optionsMenu.add(greenFactionCheckBox);
 		optionsMenu.add(hiveMindCheckBox);
 		optionsMenu.addSeparator();
 		optionsMenu.add(resetButton);
+	}
+	
+	public void update() // Updates the menu to reflect the current state of the GamePanel
+	{
+		currentFaction = GamePanel.getFactions().get(0);
+		
+		this.removeAll();
+		this.initFactionButtons();
+		this.initMenus();
+	}
+	
+	private void initFactionButtons() // Updates the list of faction buttons to reflect the current factions
+	{
+		// Changes the faction to that of the radio button clicked
+		ActionListener factionListener = new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				Object source = e.getSource();
+				JRadioButton sourceButton = (JRadioButton)source;
+
+				currentFaction = GamePanel.getFactions().get(0);
+				
+				for(Faction f : GamePanel.getFactions())
+				{
+					if(f.getName().equals(sourceButton.getText()))
+					{
+						currentFaction = f;
+						break;
+					}
+				}
+			}
+		};
+		
+		factionButtons = new ArrayList<JRadioButton>();
+		factionButtonGroup = new ButtonGroup();
+
+		for(Faction f : GamePanel.getFactions())
+		{
+			JRadioButton factionButton = new JRadioButton(f.getName());
+			factionButton.addActionListener(factionListener);
+			factionButtons.add(factionButton);
+			factionButtonGroup.add(factionButton);
+		}
 	}
 }

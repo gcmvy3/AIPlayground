@@ -16,6 +16,8 @@ public class AIPlayground
 
 	private static GamePanel gamePanel;
 	
+	protected static TopMenu topMenu;
+	
 	private static int windowWidth = 1300;
 	private static int windowHeight = 690;
 	
@@ -36,7 +38,8 @@ public class AIPlayground
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainWindow.setLayout(mainLayout);
 		
-		mainWindow.setJMenuBar(new TopMenu());
+		topMenu = new TopMenu();
+		mainWindow.setJMenuBar(topMenu);
 		
 		mainWindow.setVisible(true);
 	}

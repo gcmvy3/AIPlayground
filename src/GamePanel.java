@@ -12,7 +12,6 @@ import javax.swing.Timer;
 
 /*
  * This class is a modified JPanel that runs a game timer and draws the graphics
- *
  */
 
 public class GamePanel extends JPanel implements ActionListener, Runnable
@@ -57,7 +56,7 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 		addMouseListener(controller);
 
 		setBackground(Color.LIGHT_GRAY);
-
+		
 		g = getGraphics();
 		paint(g);
 	}
@@ -77,23 +76,24 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 	{
 		entities = new ArrayList<Entity>();
 
+		factions = new ArrayList<Faction>();
+
+		factions.add(new Faction("Red", Color.RED));
+		factions.add(new Faction("Blue", Color.BLUE));
+		
 		initializeActors();
+		AIPlayground.topMenu.update();
 	}
 
 	public static void initializeActors()
 	{
-		factions = new ArrayList<Faction>();
-
-		factions.add(new Faction(Color.RED));
-		factions.add(new Faction(Color.BLUE));
-
 		Queen redQueen;
 		Queen blueQueen;
 		Queen greenQueen;
 
 		if(greenFaction)
 		{
-			factions.add(new Faction(Color.GREEN));
+			factions.add(new Faction("Green", Color.GREEN));
 
 			redQueen = new Queen(20, 600, factions.get(0));
 			blueQueen = new Queen(panelWidth - 20, 600, factions.get(1));
@@ -203,6 +203,11 @@ public class GamePanel extends JPanel implements ActionListener, Runnable
 	public static void removeEntity(Entity e)
 	{
 		entitiesToRemove.add(e);
+	}
+	
+	public static ArrayList<Faction> getFactions()
+	{
+		return factions;
 	}
 
 	public static void togglePause()

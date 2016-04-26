@@ -31,7 +31,7 @@ public abstract class Entity
 	protected double xVelocity;
 	protected double yVelocity;
 	
-	protected Faction faction = new Faction(Color.WHITE);
+	protected Faction faction = new Faction("None" ,Color.WHITE);
 	
 	protected Rectangle bounds;
 
